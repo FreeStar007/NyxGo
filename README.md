@@ -5,7 +5,7 @@
  - NyxGo本身暂时仅支持Debian系系统
 
 # 用法
- - 启动,使用命令`sudo ./start.sh`以启动,期间注意网络通畅
+ - 启动,使用命令`sudo bash ./start.sh`以启动,期间注意网络通畅
 
 # NyxBot项目
  - Warframe状态查询机器人,部署简易,功能丰富,这里是[项目地址](https://github.com/KingPrimes/NyxBot)
