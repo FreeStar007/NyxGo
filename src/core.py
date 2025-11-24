@@ -8,49 +8,9 @@ from platform import machine
 from uuid import uuid4
 from zipfile import ZipFile
 from pathlib import Path
-# 尝试导入inquirer，如果失败则提供替代方案
-try:
-    from inquirer import Text, List, Checkbox, Confirm, Path, prompt
-    from inquirer.errors import ValidationError
-    from inquirer.questions import Question
-    INQUIRER_AVAILABLE = True
-except ImportError as e:
-    print(f"警告: inquirer库导入失败: {e}")
-    print("将使用简化的命令行交互")
-    INQUIRER_AVAILABLE = False
-    
-    # 简化的替代函数
-    class ValidationError(Exception):
-        pass
-    
-    def simple_prompt(message, default=None, validator=None):
-        """简化的提示输入函数"""
-        while True:
-            if default is not None:
-                user_input = input(f"{message} (默认: {default}): ").strip()
-                if not user_input:
-                    user_input = default
-            else:
-                user_input = input(f"{message}: ").strip()
-            
-            if validator:
-                try:
-                    if validator(user_input):
-                        return user_input
-                except ValidationError as e:
-                    print(f"错误: {e}")
-                    continue
-            else:
-                return user_input
-    
-    def simple_confirm(message, default=True):
-        """简化的确认函数"""
-        default_str = "Y/n" if default else "y/N"
-        while True:
-            response = input(f"{message} ({default_str}): ").strip().lower()
-            if not response:
-                return default
-            return response in ['y', 'yes', '是', 'true', '1']
+from inquirer import Text, List, Checkbox, Confirm, Path, prompt
+from inquirer.errors import ValidationError
+from inquirer.questions import Question
 from rich.panel import Panel
 from rich.console import Console
 from rich.progress import Progress
@@ -99,22 +59,7 @@ def check_port(_, current) -> bool:
 
 
 def ask(questions):
-    """统一的提问函数，支持inquirer和简化模式"""
-    if INQUIRER_AVAILABLE:
-        return tuple(prompt((questions,)).values())[0]
-    else:
-        # 简化模式处理
-        if hasattr(questions, 'message'):
-            return simple_prompt(questions.message, 
-                               getattr(questions, 'default', None),
-                               getattr(questions, 'validate', None))
-        elif isinstance(questions, (list, tuple)) and len(questions) > 0:
-            question = questions[0]
-            return simple_prompt(question.message,
-                               getattr(question, 'default', None),
-                               getattr(question, 'validate', None))
-        else:
-            return input("请输入: ")
+    return tuple(prompt((questions,)).values())[0]
 
 
 def downloader(url: str, save_path: str) -> bool:
@@ -279,26 +224,14 @@ def env_check() -> bool:
 
 def main():
     # 主函数，用于引导NyxBot的安装
-    if INQUIRER_AVAILABLE:
-        console.print(Panel(
-            "Warframe状态查询机器人，由著名架构师王小美开发，部署简易，更新勤奋，让我们追随她！\n请在安装过程中确保网络通畅啊！\n王小美个人博客地址：https://kingprimes.top",
-            title="NyxBot引导脚本",
-            subtitle=f"版本：{__version__}",
-            border_style=" bold cyan"
-        ))
-        if not ask(Confirm("choice", message="要开始吗？", default=True)):
-            return
-    else:
-        print("=" * 60)
-        print("NyxBot引导脚本 v{}".format(__version__))
-        print("=" * 60)
-        print("Warframe状态查询机器人，由著名架构师王小美开发")
-        print("请在安装过程中确保网络通畅！")
-        print("王小美个人博客地址：https://kingprimes.top")
-        print("=" * 60)
-        
-        if not simple_confirm("要开始吗？", default=True):
-            return
+    console.print(Panel(
+        "Warframe状态查询机器人，由著名架构师王小美开发，部署简易，更新勤奋，让我们追随她！\n请在安装过程中确保网络通畅啊！\n王小美个人博客地址：https://kingprimes.top",
+        title="NyxBot引导脚本",
+        subtitle=f"版本：{__version__}",
+        border_style=" bold cyan"
+    ))
+    if not ask(Confirm("choice", message="要开始吗？", default=True)):
+        return
 
     if not env_check():
         return
