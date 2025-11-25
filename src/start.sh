@@ -1,8 +1,9 @@
 #!/bin/bash
-if [ "$EUID" -ne 0 ]; then
-    echo "要以root用户的身份运行啊!"
+if [ "$EUID" -eq 0 ]; then
+    echo "不能以root用户的身份运行啊！"
     exit
 fi
+NUSER=$USER
 BASE="/bin"
 USER_BASE="/usr/bin"
 PKGM=""
@@ -16,14 +17,15 @@ else
     echo "暂不支持的系统"
     exit
 fi
-$PKGM install -y python3-venv
+sudo $PKGM install -y python3-venv
 TEMP_PYTHON=/usr/bin/python3
 TARGET=/usr/lib/nyxbot_venv
 TEMP_HOME=$TARGET/bin
 if [ ! -d "$TARGET" ]; then
     echo "初始化虚拟环境……"
-    $TEMP_PYTHON -m venv $TARGET
-    chmod +x -R $TARGET
+    sudo $TEMP_PYTHON -m venv $TARGET
+    sudo chown $NUSER:$NUSER $TARGET
+    sudo chmod -R +x $TARGET
     $TEMP_HOME/pip3 install -r requirements.txt -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 fi
 $TEMP_HOME/python3 ./core.py

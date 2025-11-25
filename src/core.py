@@ -30,6 +30,16 @@ all_false = lambda _: lambda: False
 pkgm = None # 初始化使用的包管理器判断变量
 
 
+def shell(command: str, error_info: str) -> bool:
+    try:
+        sp.run(command.strip().split(" "), check=True)
+    except sp.CalledProcessError:
+        error(error_info)
+        return False
+        
+    return True
+
+
 def checkout_pkgm() -> bool:
     global pkgm
     if os.path.exists("/bin/apt") or os.path.exists("/usr/bin/apt"):
@@ -98,15 +108,12 @@ def downloader(url: str, save_path: str) -> bool:
 
 # @all_true
 def install_jdk() -> bool:
-    try:
-        target_pkg = {
-            "apt": ("openjdk-21-jdk",),
-            "dnf": ("java-21-openjdk",)
-        }
-        target_pkg["yum"] = target_pkg["dnf"]
-        sp.run((pkgm, "install", "-y", *target_pkg[pkgm]), check=True)
-    except sp.CalledProcessError:
-        error("openjdk21安装失败了，只能你自己先装上再重启脚本了")
+    target_pkg = {
+        "apt": "openjdk-21-jdk",
+        "dnf": "java-21-openjdk"
+    }
+    target_pkg["yum"] = target_pkg["dnf"]
+    if not shell(f"sudo {pkgm} install -y {target_pkg[pkgm]}", "openjdk21安装失败了，只能你自己先装上再重启脚本了"):
         return False
         
     info("openjdk21装完了")
@@ -145,12 +152,9 @@ def install_qq() -> bool:
         return False
 
     info("我装一下它……")
-    try:
-        sp.run((pkgm, "install", "-y", save_path), check=True)
-    except sp.CalledProcessError:
-        error("我靠，装失败了，你自己装试试看")
+    if not shell(f"sudo {pkgm} install -y {save_path}", "我靠，装失败了，你自己装试试看"):
         return False
-
+        
     info(f"Linux版QQ装完了")
     os.remove(save_path)
     return True
@@ -161,25 +165,26 @@ def install_napcat() -> bool:
     save_path = f"/tmp/napcat-{uuid4()}.zip"
     info("开始帮你搞Xvfb和xauth……")
     target_pkg = {
-        "apt": ("xvfb", "xauth"),
-        "dnf": ("xorg-x11-server-Xvfb", "xorg-x11-xauth")
+        "apt": "xvfb xauth",
+        "dnf": "xorg-x11-server-Xvfb xorg-x11-xauth"
     }
     target_pkg["yum"] = target_pkg["dnf"]
-    try:
-        sp.run((pkgm, "install", "-y", *target_pkg[pkgm]), check=True)
-    except sp.CalledProcessError:
-        error("安装xvfb和xauth时失败了，只能靠你自己了或者求助吧")
+    if not shell(f"sudo {pkgm} install -y {target_pkg[pkgm]}", "安装xvfb和xauth时失败了，只能靠你自己了或者求助吧"):
+        return False
+        
+    info("开始帮你搞NapCat……")
+    if not shell("sudo cp ./loadNapCat.cjs /opt/QQ/resources/app", "配置文件复制失败了啊，报告开发者吧"):
         return False
 
-    info("开始帮你搞NapCat……")
-    shutil.copy("./loadNapCat.cjs", "/opt/QQ/resources/app")
-
     if not downloader("https://github.com/NapNeko/NapCatQQ/releases/download/v4.9.74/NapCat.Shell.zip", save_path):
-            return False
+        return False
 
     info("开始解压NapCat压缩包……")
-    if not os.path.exists("/opt/QQ/resources/app/napcat"):
-        shutil.unpack_archive(save_path, "/opt/QQ/resources/app/napcat")
+    target_dir = "/opt/QQ/resources/app/napcat"
+    if not os.path.exists(target_dir):
+        shutil.unpack_archive(save_path, f"{save_path}_done")
+        if not shell(f"sudo mv {save_path}_done {target_dir}"):
+            return False
     else:
         warn("目标目录已经有安排好的NapCat文件了，那我就不再解压了")
 
@@ -275,11 +280,7 @@ def main():
 
     info("配置完成，启动NyxBot……")
     info("在启动完成后可以根据其终端的输出查看WebUI（也就是配置NyxBot的界面）地址和端口号以及账号密码，记得牢记哦！")
-    try:
-        sp.run(command, check=True)
-    except sp.CalledProcessError:
-        error(f"启动失败，你只能自己来了")
-        return
+    shell(" ".join(command), "启动失败，只能你自己来了")
 
 
 if __name__ == "__main__":

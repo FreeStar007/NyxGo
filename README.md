@@ -7,7 +7,7 @@
  - **RedHat系**例子：**RedHat本体/CentOS/Fedora/Rocky**等等以**dnf/yum**作为包管理器的**标准Linux系统**
 
 # 用法
- - 启动，使用命令`sudo bash ./start.sh`以启动
+ - 启动，使用命令`bash ./start.sh`以启动
 
 # NyxBot项目
  - **Warframe状态查询机器人，部署简易，功能丰富，这里是[项目地址](https://github.com/KingPrimes/NyxBot)**
