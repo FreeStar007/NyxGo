@@ -24,6 +24,6 @@ if [ ! -d "$TARGET" ]; then
     echo "初始化虚拟环境……"
     $TEMP_PYTHON -m venv $TARGET
     chmod +x -R $TARGET
-    $TEMP_HOME/pip install -r requirements.txt -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+    $TEMP_HOME/pip3 install -r requirements.txt -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 fi
-$TEMP_HOME/python ./core.py
+$TEMP_HOME/python3 ./core.py

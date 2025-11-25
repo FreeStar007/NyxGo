@@ -1,9 +1,10 @@
-#!/bin/python3 env
+#!/usr/lib/nyxbot_venv/bin/python3 env
 import os
 import sys
 import httpx
 import json
 import subprocess as sp
+import shutil
 from datetime import datetime
 from platform import machine
 from uuid import uuid4
@@ -172,31 +173,14 @@ def install_napcat() -> bool:
         return False
 
     info("开始帮你搞NapCat……")
-    with open("/opt/QQ/resources/app/loadNapCat.cjs", "w") as w:
-        w.write("""const fs = require("fs");
-const path = require("path");
-const CurrentPath = path.dirname(__filename);
-const hasNapcatParam = process.argv.includes("--no-sandbox");
-if (hasNapcatParam) {
-    (async () => {
-        await import("file://" + path.join(CurrentPath, "./napcat/napcat.mjs"));
-        // await import("file://" + "/path/to/napcat/napcat.mjs");
-        // 需要修改napcat的用户，在"/path/to/napcat"段写自己的napcat文件夹位置，并注释path.join所在行
-    })();
-} else {
-    require("./application/app_launcher/index.js");
-    setTimeout(() => {
-        global.launcher.installPathPkgJson.main = "./application.asar/app_launcher/index.js";
-    }, 0);
-}""")
+    shutil.copy("./loadNapCat.cjs", "/opt/QQ/resources/app")
 
     if not downloader("https://github.com/NapNeko/NapCatQQ/releases/download/v4.9.74/NapCat.Shell.zip", save_path):
             return False
 
     info("开始解压NapCat压缩包……")
     if not os.path.exists("/opt/QQ/resources/app/napcat"):
-        with ZipFile(save_path, "r") as zip_ref:
-            zip_ref.extractall("/opt/QQ/resources/app/napcat")
+        shutil.unpack_archive(save_path, "/opt/QQ/resources/app/napcat")
     else:
         warn("目标目录已经有安排好的NapCat文件了，那我就不再解压了")
 
