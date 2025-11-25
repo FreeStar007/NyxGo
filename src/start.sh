@@ -3,6 +3,7 @@ if [ "$EUID" -eq 0 ]; then
     echo "不能以root用户的身份运行啊！"
     exit
 fi
+echo "虚拟环境初始化脚本，防污染系统依赖"
 NUSER=$USER
 BASE="/bin"
 USER_BASE="/usr/bin"
