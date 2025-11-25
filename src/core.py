@@ -1,6 +1,5 @@
 #!/usr/lib/nyxbot_venv/bin/python3 env
 import os
-import sys
 import httpx
 import json
 import subprocess as sp
@@ -8,7 +7,6 @@ import shutil
 from datetime import datetime
 from platform import machine
 from uuid import uuid4
-from zipfile import ZipFile
 from pathlib import Path
 from inquirer import Text, List, Checkbox, Confirm, Path, prompt
 from inquirer.errors import ValidationError
