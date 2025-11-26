@@ -31,9 +31,9 @@ structure = None # 初始化架构
 
 
 # 命令输入
-def shell(command: str, error_info: str, complex=False) -> bool:
+def shell(command: str, error_info: str, complex_mode=False) -> bool:
     try:
-        sp.run(command.strip().split(" ") if not complex else command, check=True, shell=complex)
+        sp.run(command.strip().split(" ") if not complex_mode else command, check=True, shell=complex_mode)
     except sp.CalledProcessError:
         error(error_info)
         return False
@@ -219,7 +219,7 @@ def install_napcat() -> bool:
 
     info("开始处理package.json文件……")
     package_file = "/opt/QQ/resources/app/package.json"
-    if not shell(r"""sudo sed -i 's/"main": ".*\/index.js"/"main": ".\/loadNapCat.cjs"/' /opt/QQ/resources/app/package.json""", "package.json处理失败了啊", complex=True):
+    if not shell(r"""sudo sed -i 's/"main": ".*\/index.js"/"main": ".\/loadNapCat.cjs"/' /opt/QQ/resources/app/package.json""", "package.json处理失败了啊", complex_mode=True):
         return False
 
     info("NapCat搞定，输入“xvfb-run -a qq --no-sandbox -q <你的QQ号>”来启动，会让你扫码登录，随后在它给的WebUI地址中配置一个WS服务器，消息格式选Array，然后自己输入一个端口，记住这个地址，例如6666端口地址就是ws://127.0.0.1:6666，然后在NyxBot的WebUI里面选择客户端模式去连接它就行了")
