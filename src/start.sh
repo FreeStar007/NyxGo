@@ -20,6 +20,10 @@ TARGET="/usr/lib/nyxbot_venv"
 TEMP_HOME="$TARGET/bin"
 if [ ! -d "$TARGET" ]; then
     echo "初始化运行环境……"
+    while ! command -v git &> /dev/null; do
+        echo "安装git……"
+        sudo "$pkgm" install -y git
+    done
     while ! "$TEMP_PYTHON" -m pip --help &> /dev/null; do
         echo "安装pip3……"
         sudo "$pkgm" install -y python3-pip

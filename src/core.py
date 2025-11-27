@@ -26,6 +26,10 @@ error = lambda message: rprint(f"[bold][red][{date()} ERROR] {message}[/red][/bo
 all_true = lambda _: lambda: True
 # 直接返回False的装饰器，同上
 all_false = lambda _: lambda: False
+# 全局下载资源URL文件
+with open("./source.json", "r") as r:
+    source = json.load(r)
+
 pkgm = None # 初始化使用的包管理器判断变量
 structure = None # 初始化架构
 
@@ -163,18 +167,7 @@ def install_jdk() -> bool:
 def install_qq() -> bool:
     # 下载Linux版QQ
     info("开始帮你搞Linux版的QQ……")
-    target_pkg = {
-        "apt": {
-            "x64": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.21_251114_amd64_01.deb",
-            "arm":  "https://dldir1v6.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.21_251114_arm64_01.deb",
-            "suffix": ".deb"
-        },
-        "dnf": {
-            "x64": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.21_251114_x86_64_01.rpm",
-            "arm": "https://dldir1v6.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.21_251114_aarch64_01.rpm",
-            "suffix": ".rpm"
-        }
-    }
+    target_pkg = source["qq"]
     target_pkg["yum"] = target_pkg["dnf"]
     saved_path = f"/tmp/linuxqq-{uuid4()}{target_pkg[pkgm]['suffix']}"
     if not downloader(target_pkg[pkgm][structure], saved_path, "Linux版QQ文件下载中"):
@@ -206,8 +199,14 @@ def install_napcat() -> bool:
     if not copy("./loadNapCat.cjs", "/opt/QQ/resources/app", "配置文件复制失败了啊，报告开发者吧"):
         return False
 
-    if not downloader("https://github.com/NapNeko/NapCatQQ/releases/download/v4.9.74/NapCat.Shell.zip", saved_path, "NapCat文件下载中"):
-        return False
+    if not downloader(source["napcat"], saved_path, "NapCat文件下载中"):
+        warn("尝试git国内源……")
+        target_git = f"/tmp/napcat-git-{uuid4()}"
+        if shell(f"git clone {source['napcat_git']} {target_git}", "git国内源失败，联系开发者吧"):
+            move(f"{target_git}/NapCat.Shell.zip", saved_path)
+            remove(target_git, append=" -r")
+        else:
+            return False
 
     info("开始解压NapCat压缩包……")
     target_dir = "/opt/QQ/resources/app/napcat"
