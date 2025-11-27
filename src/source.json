@@ -11,6 +11,6 @@
             "suffix": ".rpm"
         }
     },
-    "napcat": " https://github.com/NapNeko/NapCatQQ/releases/download/v4.9.78/NapCat.Shell.zip",
+    "napcat": "https://github.com/NapNeko/NapCatQQ/releases/download/v4.9.78/NapCat.Shell.zip",
     "napcat_git": "https://gitee.com/FreeStar007/NyxGoData.git"
 }
