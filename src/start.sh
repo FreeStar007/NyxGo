@@ -18,7 +18,7 @@ TEMP_PYTHON="/usr/bin/python3"
 TARGET="/usr/lib/nyxbot_venv"
 TEMP_HOME="$TARGET/bin"
 if [ ! -d "$TARGET" ]; then
-    if "$TEMP_PYTHON" -m pip --help &> /dev/null; then
+    if ! "$TEMP_PYTHON" -m pip --help &> /dev/null; then
         echo "安装pip3……"
         sudo "$pkgm" install -y python3-pip
     fi
