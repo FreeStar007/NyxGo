@@ -216,8 +216,8 @@ def install_napcat() -> bool:
     info("开始解压NapCat压缩包……")
     target_dir = "/opt/QQ/resources/app/napcat"
     if not os.path.exists(target_dir):
-        shutil.unpack_archive(saved_path)
-        if not move(f"{saved_path}", target_dir, "我靠，文件移动失败了，找开发者去"):
+        shutil.unpack_archive(saved_path, f"{saved_path}-temp")
+        if not move(f"{saved_path}-temp", target_dir, "我靠，文件移动失败了，找开发者去"):
             return False
     else:
         warn("目标目录已经有安排好的NapCat文件了，那我就不再解压了")
