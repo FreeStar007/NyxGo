@@ -203,7 +203,7 @@ def install_napcat() -> bool:
         if not remove(saved_path, "缓存文件删除失败，我重新命名下"):
             saved_path = f"/tmp/napcat-{uuid4()}.zip"
 
-        warn("尝试git国内源……")
+        warn("我试试git国内源……")
         target_git = f"/tmp/napcat-git-{uuid4()}"
         if shell(f"git clone {source['napcat_git']} {target_git}", "git国内源失败，联系开发者吧"):
             if not move(f"{target_git}/NapCat.Shell.zip", saved_path, "文件移动失败了，得找开发者啊"):
