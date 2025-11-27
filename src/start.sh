@@ -20,7 +20,7 @@ TEMP_HOME="$TARGET/bin"
 if [ ! -d "$TARGET" ]; then
     if ! "$TEMP_PYTHON" -m venv --help &> /dev/null; then
         echo "安装python3-venv……"
-        sudo "$pkgm" install -y python3-venv
+        sudo "$pkgm" install -y python3-pip python3-venv
     fi
     echo "初始化虚拟环境……"
     sudo "$TEMP_PYTHON" -m venv "$TARGET"
