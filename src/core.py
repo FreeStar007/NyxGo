@@ -75,8 +75,9 @@ def checkout_pkgm() -> bool:
     return True
     
     
-# 架构检测
+# 检测架构
 def checkout_structure() -> bool:
+    global structure
     match machine().lower():
         case "x86_64" | "amd64" | "x64":
             info("x64架构")
