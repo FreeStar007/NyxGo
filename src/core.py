@@ -12,9 +12,9 @@ from pathlib import Path
 from inquirer import Text, List, Checkbox, Confirm, Path, prompt
 from inquirer.errors import ValidationError
 from inquirer.questions import Question
+from rich import print as rprint
 from rich.panel import Panel
 from rich.progress import Progress
-from rich import print as rprint
 
 
 # 日志函数
