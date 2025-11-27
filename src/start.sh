@@ -32,4 +32,5 @@ if [ ! -d "$TARGET" ]; then
     sudo chmod -R +x "$TARGET"
     "$TEMP_HOME/pip3" install -r requirements.txt -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
 fi
+echo "启动脚本……"
 "$TEMP_HOME/python3" ./core.py
