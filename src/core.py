@@ -1,4 +1,4 @@
-#!/usr/lib/nyxbot_venv/bin/python3 env
+#!/usr/lib/nyxgo_venv/bin/python3 env
 import os
 import httpx
 import json
@@ -170,7 +170,7 @@ def install_qq() -> bool:
     target_pkg = source["qq"]
     target_pkg["yum"] = target_pkg["dnf"]
     saved_path = f"/tmp/linuxqq-{uuid4()}{target_pkg[pkgm]['suffix']}"
-    if not downloader(target_pkg[pkgm][structure], saved_path, "Linux版QQ文件下载中"):
+    if not downloader(target_pkg[pkgm][structure], saved_path, "Linux版QQ文件下载中……"):
         return False
 
     info("我装一下它……")
@@ -199,7 +199,7 @@ def install_napcat() -> bool:
     if not copy("./loadNapCat.cjs", "/opt/QQ/resources/app", "配置文件复制失败了啊，报告开发者吧"):
         return False
 
-    if not downloader(source["napcat"], saved_path, "NapCat文件下载中"):
+    if not downloader(source["napcat"], saved_path, "NapCat文件下载中……"):
         if not remove(saved_path, "缓存文件删除失败，我重新命名下"):
             saved_path = f"/tmp/napcat-{uuid4()}.zip"
 
