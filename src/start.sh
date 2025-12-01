@@ -20,18 +20,19 @@ TARGET="/usr/lib/nyxgo_venv"
 TEMP_HOME="$TARGET/bin"
 if [ ! -d "$TARGET" ]; then
     echo "初始化运行环境……"
-    while ! command -v git &> /dev/null; do
+    if ! command -v git &> /dev/null; then
         echo "安装git……"
         sudo "$pkgm" install -y git
-    done
-    while ! "$TEMP_PYTHON" -m pip --help &> /dev/null; do
+    fi
+    if ! "$TEMP_PYTHON" -m pip --help &> /dev/null; then
         echo "安装pip3……"
         sudo "$pkgm" install -y python3-pip
-    done
-    while ! sudo "$TEMP_PYTHON" -m venv "$TARGET" &> /dev/null; do
+    fi
+    if ! "$TEMP_PYTHON" -m venv --help &> /dev/null; then
         echo "安装venv……"
         sudo "$pkgm" install -y python3-venv
-    done
+    fi
+    sudo "$TEMP_PYTHON" -m venv "$TARGET"
     sudo chown -R "$NUSER:$NUSER" "$TARGET"
     sudo chmod -R +x "$TARGET"
     "$TEMP_HOME/pip3" install -r ./requirements.txt -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
