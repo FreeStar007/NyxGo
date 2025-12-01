@@ -1,10 +1,11 @@
 #!/bin/bash
-TARGET="./nyxgo"
-SCRIPT="./start.run"
+TARGET="nyxgo"
+SCRIPT="start.run"
+TEMP_CORE="core_data"
 mkdir "$TARGET"
-cp "../core.py" "../loadNapCat.cjs" "../locate.yaml" "../source.json" "../requirements.txt" "$TARGET"
-tar -czf core_data "$TARGET"
+cp "../core.py" "../loadNapCat.cjs" "../locate.yaml" "../source.json" "../requirements.txt" "./$TARGET"
+tar -czf "$TEMP_CORE" "$TARGET/"
 cat ./template.sh ./core_data > "$SCRIPT"
 chmod +x "$SCRIPT"
-rm -rf "$TARGET" ./core_data
+rm -rf "./$TARGET" "./$TEMP_CORE" 
 echo "自解压脚本制作完毕->$SCRIPT"
