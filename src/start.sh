@@ -6,7 +6,7 @@ fi
 readonly NUSER=$USER
 readonly TEMP_PYTHON="/usr/bin/python3"
 readonly TARGET="/usr/lib/nyxgo_venv"
-readobly TEMP_HOME="$TARGET/bin"
+readonly TEMP_HOME="$TARGET/bin"
 pkgm=""
 if command -v apt &> /dev/null; then
     pkgm="apt"
