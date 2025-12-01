@@ -6,6 +6,7 @@ import yaml
 import subprocess as sp
 import shutil
 from typing import Any
+from enum import Enum
 from datetime import datetime
 from platform import machine
 from uuid import uuid4
@@ -16,6 +17,18 @@ from inquirer.questions import Question
 from rich import print as rprint
 from rich.panel import Panel
 from rich.progress import Progress
+
+
+# 选项枚举类
+class Choices(Enum):
+    NAPCAT = "NapCat"
+    STARTING_PORT = "启动时的端口号"
+    STARTING_MODE = "启动时的连接模式"
+    CONNECTION_URL = "启动时连接的URL"
+    END_POINT = "启动时被连接的URL端点"
+    TOKEN = "启动时连接/被连接的token"
+    SERVER_MODE = "Server模式"
+    CLIENT_MODE = "Client模式"
 
 
 # 日志函数
@@ -315,10 +328,10 @@ def main() -> None:
     
     if not ask(Confirm("qqframe", message="有没有装QQ机器人框架？这是NyxBot和QQ对话的基础啊", default=True)):
         info("那你就选一下，我帮你装一个")
-        match ask(List("frame", message="选择一个QQ机器人框架（推荐NapCat）", choices=(
-            "NapCat",
+        match ask(List("frame", message=f"选择一个QQ机器人框架（推荐{Choices.NAPCAT.value}）", choices=(
+            Choices.NAPCAT.value,
             ))):
-            case "NapCat":
+            case Choices.NAPCAT.value:
                 if not install_napcat():
                     return
             case _:
@@ -328,38 +341,38 @@ def main() -> None:
     nyxbot_path = ask(Path("nyxbot_path", message="请输入NyxBot.jar的路径", validate=checkout_path))
     info("配置NyxBot……")
     choices = ask(Checkbox("functions", message="请选择你要配置的选项（默认不需要勾选，到WebUI里面配置就行）", choices=(
-        "启动时的端口号",
-        "启动时的连接模式",
-        "连接时的目标URL",
-        "被连接时的目标URL的端点",
-        "被连接时的目标URL的token"
+        Choices.STARTING_PORT.value,
+        Choices.STARTING_MODE.value,
+        Choices.CONNECTION_URL.value,
+        Choices.END_POINT.value,
+        Choices.TOKEN.value
         )))
     command = ["java", "-jar", nyxbot_path]
     for choice in choices:
         match choice:
-            case "启动时的端口号":
-                command.append(f"--server.port={ask(Text('nyxbot_port', message='请输入NyxBot启动时端口号（默认8080）', default=8080, validate=checkout_port))}")
-            case "启动时的连接模式":
-                match ask(List("nyxbot_mode", message="请选择NyxBot启动时连接模式（推荐Client模式）", choices=(
-                    "Server模式",
-                    "Client模式"
+            case Choices.STARTING_PORT.value:
+                command.append(f"--server.port={ask(Text('nyxbot_port', message=f'请输入{Choices.STARTING_PORT.value}（默认8080）', default=8080, validate=checkout_port))}")
+            case Choices.STARTING_MODE.value:
+                match ask(List("nyxbot_mode", message=f"请选择{Choices.STARTING_MODE.value}（推荐Client模式）", choices=(
+                    Choices.SERVER_MODE.value,
+                    Choices.CLIENT_MODE.value
                     ))):
-                    case "Server模式":
+                    case Choices.SERVER_MODE.value:
                         if not edit_locate("isServerOrClient", True):
                             return
-                    case "Client模式":
+                    case Choices.CLIENT_MODE.value:
                         if not edit_locate("isServerOrClient", False):
                             return
                     case _:
                         return
-            case "连接时的目标URL":
-                    if not edit_locate("wsClientUrl", ask(Text("wsClientUrl", message="请输入连接时的目标URL（默认ws://127.0.0.1:8081）", default="ws://127.0.0.1:8081", validate=checkout_url))):
+            case Choices.CONNECTION_URL.value:
+                    if not edit_locate("wsClientUrl", ask(Text("wsClientUrl", message=f"请输入{Choices.CONNECTION_URL.value}（默认ws://127.0.0.1:8081）", default="ws://127.0.0.1:8081", validate=checkout_url))):
                         return
-            case "被连接时的目标URL的端点":
-                if not edit_locate("wsServerUrl", ask(Text("wsServerUrl", message="请输入被连接时的目标URL端点（默认/ws/shiro，那么连接NyxBot时URL就是ws://127.0.0.1:<你启动时配置的端口>/ws/shiro）", default="/ws/shiro"))):
+            case Choices.END_POINT.value:
+                if not edit_locate("wsServerUrl", ask(Text("wsServerUrl", message=f"请输入{Choices.END_POINT.value}（默认/ws/shiro，那么连接NyxBot时URL就是ws://127.0.0.1:<你启动时配置的端口>/ws/shiro）", default="/ws/shiro"))):
                     return
-            case "被连接时的目标URL的token":
-                if not edit_locate("token", ask(Text("token", message="请输入被连接时的token（默认为空）"))):
+            case Choices.TOKEN.value:
+                if not edit_locate("token", ask(Text("token", message=f"请输入{Choices.TOKEN.value}（默认为空）"))):
                     return
             case _:
                 return
