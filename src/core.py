@@ -36,19 +36,14 @@ date = lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 info = lambda message: rprint(f"[bold][green][{date()} INFO] {message}[/green][/bold]")
 warn = lambda message: rprint(f"[bold][yellow][{date()} WARN] {message}[/yellow][/bold]")
 error = lambda message: rprint(f"[bold][red][{date()} ERROR] {message}[/red][/bold]")
-# 直接返回True的装饰器，测试用
-all_true = lambda _: lambda: True
-# 直接返回False的装饰器，同上
-all_false = lambda _: lambda: False
-# 全局下载资源URL文件
-with open("./source.json", "r") as r:
-    source = json.load(r)
-
 pkgm = None # 初始化使用的包管理器判断变量
 structure = None # 初始化架构
 locate_file = "locate.yaml" # 定位文件
 locate_dir = "./data" # 定位文件夹
 locate_target = f"{locate_dir}/{locate_file}"
+# 全局下载资源URL文件
+with open("./source.json", "r") as r:
+    source = json.load(r)
 
 
 # 命令输入
@@ -200,7 +195,6 @@ def downloader(url: str, saved_path: str, downloading_info: str) -> bool:
     return True
 
 
-# @all_true
 def install_jdk() -> bool:
     target_pkg = {
         "apt": "openjdk-21-jdk",
@@ -215,7 +209,6 @@ def install_jdk() -> bool:
 
 
 # 安装Linux版QQ
-# @all_true
 def install_qq() -> bool:
     info("开始帮你搞Linux版QQ……")
     target_pkg = source["qq"]
@@ -234,7 +227,6 @@ def install_qq() -> bool:
 
 
 # 安装NapCat
-# @all_true
 def install_napcat() -> bool:
     saved_path = f"/tmp/napcat-{uuid4()}.zip"
     info("开始帮你搞Xvfb和xauth……")
@@ -284,7 +276,6 @@ def install_napcat() -> bool:
 
 
 # 检测环境
-# @all_true
 def checkout_env() -> bool:
     # 检查系统环境
     info("让我看看你环境正不正常啊……")
