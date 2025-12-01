@@ -38,9 +38,10 @@ warn = lambda message: rprint(f"[bold][yellow][{date()} WARN] {message}[/yellow]
 error = lambda message: rprint(f"[bold][red][{date()} ERROR] {message}[/red][/bold]")
 pkgm = None # 初始化使用的包管理器判断变量
 structure = None # 初始化架构
-locate_file = "locate.yaml" # 定位文件
+locate_file = "./locate.yaml" # 定位文件
 locate_dir = "./data" # 定位文件夹
-locate_target = f"{locate_dir}/{locate_file}"
+locate_target = "./data/locate.yaml" # 定位文件夹目标
+starter_command = ["java", "-jar"] # 启动命令
 # 全局下载资源URL文件
 with open("./source.json", "r") as r:
     source = json.load(r)
@@ -108,30 +109,6 @@ def checkout_structure() -> bool:
     return True
 
 
-# 编辑定位文件
-def edit_locate(key, value) -> bool:
-    global locate_dir, locate_file, locate_target
-    if not (os.path.exists(locate_dir) and os.path.isdir(locate_dir)):
-        error("没找到data文件夹或者已经有叫data的文件了，把它弄走然后启动一次NyxBot来初始化data文件夹吧")
-        return False
-        
-    if os.path.exists(locate_target):
-        locate_file = locate_target
-
-    try:
-        with open(locate_file, "r") as r:
-            locate_data = yaml.safe_load(r)
-            locate_data[key] = value
-            
-        with open(locate_target, "w") as w:
-            yaml.safe_dump(locate_data, w)
-    except (OSError, FileNotFoundError) as e:
-        error(f"配置文件编辑失败了啊，报告开发者吧：{e}")
-        return False
-
-    return True
-
-
 # 检测输入内容
 def checkout_null(target: str) -> bool:
     if not target:
@@ -170,7 +147,7 @@ def checkout_url(_, current) -> bool:
         raise ValidationError("", reason="URL必须以http/https/ws/wss开头啊")
 
     return True
-    
+
 
 # 单次提问简化
 def ask(question) -> Any:
@@ -303,8 +280,74 @@ def checkout_env() -> bool:
         return False
 
 
+# 编辑定位文件
+def edit_locate(key, value) -> bool:
+    global locate_file, locate_target
+    if os.path.exists(locate_target):
+        locate_file = locate_target
+        
+    try:
+        with open(locate_file, "r") as r:
+            locate_data = yaml.safe_load(r)
+            locate_data[key] = value
+            
+        with open(locate_target, "w") as w:
+            yaml.safe_dump(locate_data, w)
+    except (OSError, FileNotFoundError) as e:
+        error(f"配置文件编辑失败了啊，报告开发者吧：{e}")
+        return False
+
+    return True
+
+
+def configure_nyxbot() -> bool:
+    info("配置NyxBot……")
+    if not os.path.exists(locate_dir):
+        warn("没找到data文件夹，我造一个")
+        os.mkdir("data")
+        
+    choices = ask(Checkbox("functions", message="请选择你要配置的选项（默认不需要勾选，到WebUI里面配置就行）", choices=(
+        Choices.STARTING_PORT.value,
+        Choices.STARTING_MODE.value,
+        Choices.CONNECTION_URL.value,
+        Choices.END_POINT.value,
+        Choices.TOKEN.value
+        )))
+    for choice in choices:
+        match choice:
+            case Choices.STARTING_PORT.value:
+                starter_command.append(f"--server.port={ask(Text('nyxbot_port', message=f'请输入{Choices.STARTING_PORT.value}（默认8080）', default=8080, validate=checkout_port))}")
+            case Choices.STARTING_MODE.value:
+                match ask(List("nyxbot_mode", message=f"请选择{Choices.STARTING_MODE.value}（推荐Client模式）", choices=(
+                    Choices.SERVER_MODE.value,
+                    Choices.CLIENT_MODE.value
+                    ))):
+                    case Choices.SERVER_MODE.value:
+                        if not edit_locate("isServerOrClient", True):
+                            return False
+                    case Choices.CLIENT_MODE.value:
+                        if not edit_locate("isServerOrClient", False):
+                            return False
+                    case _:
+                        return False
+            case Choices.CONNECTION_URL.value:
+                    if not edit_locate("wsClientUrl", ask(Text("wsClientUrl", message=f"请输入{Choices.CONNECTION_URL.value}（默认ws://127.0.0.1:8081）", default="ws://127.0.0.1:8081", validate=checkout_url))):
+                        return False
+            case Choices.END_POINT.value:
+                if not edit_locate("wsServerUrl", ask(Text("wsServerUrl", message=f"请输入{Choices.END_POINT.value}（默认/ws/shiro，那么客户端连接时的URL就是ws://127.0.0.1:<启动时的端口>/ws/shiro）", default="/ws/shiro"))):
+                    return False
+            case Choices.TOKEN.value:
+                if not edit_locate("token", ask(Text("token", message=f"请输入{Choices.TOKEN.value}（默认为空）"))):
+                    return False
+            case _:
+                return False
+                
+    return True
+
+
 # 主函数
 def main() -> None:
+    global locate_dir
     rprint(Panel(
         "Warframe状态查询机器人，由著名架构师王小美开发，部署简易，更新勤奋，让我们追随她！\n请在安装过程中确保网络通畅啊！\n王小美个人博客地址：https://kingprimes.top",
         title="NyxBot引导脚本",
@@ -329,48 +372,14 @@ def main() -> None:
                 return
 
     ask(Text("_", message="这里我会等你多开终端启动好QQ机器人框架，好了就随便输入点什么，然后继续配置NyxBot吧"))
-    nyxbot_path = ask(Path("nyxbot_path", message="请输入NyxBot.jar的路径", validate=checkout_file))
-    info("配置NyxBot……")
-    choices = ask(Checkbox("functions", message="请选择你要配置的选项（默认不需要勾选，到WebUI里面配置就行）", choices=(
-        Choices.STARTING_PORT.value,
-        Choices.STARTING_MODE.value,
-        Choices.CONNECTION_URL.value,
-        Choices.END_POINT.value,
-        Choices.TOKEN.value
-        )))
-    command = ["java", "-jar", nyxbot_path]
-    for choice in choices:
-        match choice:
-            case Choices.STARTING_PORT.value:
-                command.append(f"--server.port={ask(Text('nyxbot_port', message=f'请输入{Choices.STARTING_PORT.value}（默认8080）', default=8080, validate=checkout_port))}")
-            case Choices.STARTING_MODE.value:
-                match ask(List("nyxbot_mode", message=f"请选择{Choices.STARTING_MODE.value}（推荐Client模式）", choices=(
-                    Choices.SERVER_MODE.value,
-                    Choices.CLIENT_MODE.value
-                    ))):
-                    case Choices.SERVER_MODE.value:
-                        if not edit_locate("isServerOrClient", True):
-                            return
-                    case Choices.CLIENT_MODE.value:
-                        if not edit_locate("isServerOrClient", False):
-                            return
-                    case _:
-                        return
-            case Choices.CONNECTION_URL.value:
-                    if not edit_locate("wsClientUrl", ask(Text("wsClientUrl", message=f"请输入{Choices.CONNECTION_URL.value}（默认ws://127.0.0.1:8081）", default="ws://127.0.0.1:8081", validate=checkout_url))):
-                        return
-            case Choices.END_POINT.value:
-                if not edit_locate("wsServerUrl", ask(Text("wsServerUrl", message=f"请输入{Choices.END_POINT.value}（默认/ws/shiro，那么客户端连接时的URL就是ws://127.0.0.1:<启动时的端口>/ws/shiro）", default="/ws/shiro"))):
-                    return
-            case Choices.TOKEN.value:
-                if not edit_locate("token", ask(Text("token", message=f"请输入{Choices.TOKEN.value}（默认为空）"))):
-                    return
-            case _:
-                return
-
+    starter_command.append(ask(Path("nyxbot_path", message="请输入NyxBot.jar的路径", validate=checkout_file)))
+    if not configure_nyxbot():
+        error("配置过程发生错误")
+        return
+        
     info("配置完成，启动NyxBot……")
     info("在启动完成后可以根据其终端的输出查看WebUI（也就是配置NyxBot的界面）地址和端口号以及账号密码，记得牢记哦！")
-    shell(" ".join(command), "启动失败，只能你自己来了")
+    shell(" ".join(starter_command), "启动失败，只能你自己来了")
 
 
 if __name__ == "__main__":
