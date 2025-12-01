@@ -100,20 +100,14 @@ def checkout_structure() -> bool:
     return True
 
 
-# 检测定位文件
-def checkout_locate() -> bool:
-    global locate_dir, locate_file, locate_target
-    if not os.path.exists(locate_target):
-        error("设置这一项前请先启动一次以初始化NyxBot")
-        return False
-
-    return True
-
-
 # 编辑定位文件
 def edit_locate(key, value) -> bool:
     global locate_dir, locate_file, locate_target
-    if checkout_locate():
+    if not (os.path.exists(locate_dir) and os.path.isdir(locate_dir)):
+        error("没找到data文件夹或者已经有叫data的文件了，把它弄走然后启动一次NyxBot来初始化data文件夹吧")
+        return False
+        
+    if os.path.exists(locate_target):
         locate_file = locate_target
 
     try:
@@ -346,15 +340,12 @@ def main() -> None:
             case "启动时的端口号":
                 command.append(f"--server.port={ask(Text('nyxbot_port', message='请输入NyxBot启动时端口号（默认8080）', default=8080, validate=checkout_port))}")
             case "启动时的连接模式":
-                if not checkout_locate():
-                    return
-
                 match ask(List("nyxbot_mode", message="请选择NyxBot启动时连接模式（推荐Client模式）", choices=(
                     "Server模式",
                     "Client模式"
                     ))):
                     case "Server模式":
-                        if not copy(f"./{locate_file}", locate_dir, "配置文件复制失败了啊，报告开发者吧"):
+                        if not edit_locate("isServerOrClient", True):
                             return
                     case "Client模式":
                         if not edit_locate("isServerOrClient", False):
@@ -362,21 +353,12 @@ def main() -> None:
                     case _:
                         return
             case "连接时的目标URL":
-                    if not checkout_locate():
-                        return
-
                     if not edit_locate("wsClientUrl", ask(Text("wsClientUrl", message="请输入连接时的目标URL（默认ws://127.0.0.1:8081）", default="ws://127.0.0.1:8081", validate=checkout_url))):
                         return
             case "被连接时的目标URL的端点":
-                if not checkout_locate():
-                    return
-
                 if not edit_locate("wsServerUrl", ask(Text("wsServerUrl", message="请输入被连接时的目标URL端点（默认/ws/shiro，那么连接NyxBot时URL就是ws://127.0.0.1:<你启动时配置的端口>/ws/shiro）", default="/ws/shiro"))):
                     return
             case "被连接时的目标URL的token":
-                if not checkout_locate():
-                    return
-
                 if not edit_locate("token", ask(Text("token", message="请输入被连接时的token（默认为空）"))):
                     return
             case _:
