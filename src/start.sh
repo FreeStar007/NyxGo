@@ -3,10 +3,10 @@ if [ "$EUID" -eq 0 ]; then
     echo "不能以root用户的身份运行啊！"
     exit
 fi
-NUSER=$USER
-TEMP_PYTHON="/usr/bin/python3"
-TARGET="/usr/lib/nyxgo_venv"
-TEMP_HOME="$TARGET/bin"
+readonly NUSER=$USER
+readonly TEMP_PYTHON="/usr/bin/python3"
+readonly TARGET="/usr/lib/nyxgo_venv"
+readobly TEMP_HOME="$TARGET/bin"
 pkgm=""
 if command -v apt &> /dev/null; then
     pkgm="apt"
