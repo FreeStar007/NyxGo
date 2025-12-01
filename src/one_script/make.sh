@@ -1,5 +1,5 @@
 #!/bin/bash
-TARGET="./nyxbot"
+TARGET="./nyxgo"
 SCRIPT="./start.run"
 mkdir "$TARGET"
 cp "../core.py" "../loadNapCat.cjs" "../locate.yaml" "../source.json" "../requirements.txt" "$TARGET"
