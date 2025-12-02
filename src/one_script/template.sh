@@ -41,7 +41,7 @@ if [ ! -d "$TARGET" ]; then
 fi
 echo "启动脚本……"
 if [ ! -d "$CORE_DIR" ]; then
-    tail -n +49 "$0" | tar -xzf -
+    tail -n +49 "$0" | tar -xJf -
 fi
 cd "$CORE_DIR"
 "$TEMP_HOME/python3" "$CORE_FILE"
