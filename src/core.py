@@ -348,6 +348,7 @@ def configure_nyxbot() -> bool:
 # 主函数
 def main() -> None:
     global locate_dir
+    shell("clear", "逆天了，清屏都能失败，不过无所谓不影响")
     rprint(Panel(
         "Warframe状态查询机器人，由著名架构师王小美开发，部署简易，更新勤奋，让我们追随她！\n请在安装过程中确保网络通畅啊！\n王小美个人博客地址：https://kingprimes.top",
         title="NyxBot引导脚本",
