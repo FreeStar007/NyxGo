@@ -86,7 +86,7 @@ def checkout_pkgm() -> bool:
         info("使用yum包管理器")
         pkgm = "yum"
     else:
-        error("暂不支持的系统啊")
+        error("暂不支持的发行版啊")
         return False
         
     return True
