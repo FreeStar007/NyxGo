@@ -119,7 +119,7 @@ def checkout_null(target) -> bool:
 
 # 输入文件检测
 def checkout_file(_, current) -> bool:
-    checknull(current)
+    checkout_null(current)
     if current == "-":
         print()
         if not install_nyxbot():
