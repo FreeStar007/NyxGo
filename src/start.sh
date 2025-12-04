@@ -4,7 +4,7 @@ if [ "$EUID" -eq 0 ]; then
     exit
 fi
 readonly NUSER=$USER
-readonly TEMP_PYTHON="/usr/bin/python3"
+readonly TEMP_PYTHON="$(command -v python3)"
 readonly TARGET="/usr/lib/nyxgo_venv"
 readonly TEMP_HOME="$TARGET/bin"
 pkgm=""
