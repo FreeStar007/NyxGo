@@ -5,7 +5,7 @@ import json
 import yaml
 import subprocess as sp
 import shutil
-from time import time_ms
+from time import time
 from typing import Any
 from enum import Enum
 from datetime import datetime
@@ -37,6 +37,7 @@ date = lambda: datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 info = lambda message: rprint(f"[bold][green][{date()} INFO] {message}[/green][/bold]")
 warn = lambda message: rprint(f"[bold][yellow][{date()} WARN] {message}[/yellow][/bold]")
 error = lambda message: rprint(f"[bold][red][{date()} ERROR] {message}[/red][/bold]")
+time_ms = lambda: time() * 1000
 pkgm = None # 初始化使用的包管理器判断变量
 structure = None # 初始化架构
 locate_file = "./locate.yaml" # 定位文件
@@ -160,11 +161,11 @@ def github_proxy(github_url) -> str:
     info("开始测试最快的代理服务器……")
     speed = {}
     for proxy in source["proxies"]:
-        start = time_ms
+        start = time_ms()
         try:
             if httpx.head(f"{proxy}/{github_url}", follow_redirects=True).status_code < 400:
-                speed[proxy] = time_ms - start
-        except httpx.ConnectError:
+                speed[proxy] = time_ms() - start
+        except (httpx.ConnectError, httpx.ConnectTimeout):
             pass
         
     if not speed:
