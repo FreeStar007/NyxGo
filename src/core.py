@@ -111,13 +111,19 @@ def checkout_structure() -> bool:
 
 
 # 检测输入内容
-def checkout_null(target: str) -> bool:
-    if not target:
+def checkout_null(_, current) -> bool:
+    if not current:
         raise ValidationError("", reason="啥都没输入啊")
 
 
 # 输入文件检测
 def checkout_file(_, current) -> bool:
+    if current == "-":
+        if not install_nyxbot():
+            raise ValidationError("", reason="自己下载后再来吧")
+
+        current = "./NyxBot.jar"
+
     if not os.path.exists(current) or os.path.isdir(current):
         raise ValidationError("", reason="这个路径无效啊，而且不能是文件夹")
         
@@ -203,6 +209,16 @@ def install_jdk() -> bool:
         return False
         
     info("openjdk21装完了")
+    return True
+
+
+def install_nyxbot() -> bool:
+    info("开始帮你搞NyxBot.jar……")
+    saved_path = "./NyxBot.jar"
+    if not downloader(github_proxy(source["nyxbot"]), saved_path, "NyxBot.jar下载中……"):
+        return Fasle
+
+    info("NyxBot.jar已经放在当前目录下了")
     return True
 
 
@@ -383,7 +399,8 @@ def main() -> None:
                 return
 
     ask(Text("_", message="这里我会等你多开终端启动好QQ机器人框架，好了就随便输入点什么，然后继续配置NyxBot吧"))
-    starter_command.append(ask(Path("nyxbot_path", message=f"请输入NyxBot.jar的路径（当前位于{os.getcwd()}）", validate=checkout_file)))
+    current_dir = os.getcwd().split("/")
+    starter_command.append(ask(Path("nyxbot_path", message=f"请输入NyxBot.jar的路径（当前位于/{current_dir[0]}/.../{current_dir[-1]}），或输入\"-\"安装", validate=checkout_file)))
     if not configure_nyxbot():
         error("配置过程发生错误")
         return
