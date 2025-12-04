@@ -5,7 +5,7 @@ import json
 import yaml
 import subprocess as sp
 import shutil
-from time import time
+from time import time_ms
 from typing import Any
 from enum import Enum
 from datetime import datetime
@@ -154,10 +154,10 @@ def github_proxy(github_url) -> str:
     info("开始测试最快的代理服务器……")
     speed = {}
     for proxy in source["proxies"]:
-        start = time()
+        start = time_ms
         try:
             if httpx.head(f"{proxy}/{github_url}", follow_redirects=True).status_code < 400:
-                speed[proxy] = time() - start
+                speed[proxy] = time_ms - start
         except httpx.ConnectError:
             pass
         
