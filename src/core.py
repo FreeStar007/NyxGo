@@ -112,8 +112,8 @@ def checkout_structure() -> bool:
 
 
 # 检测输入内容
-def checkout_null(_, current) -> bool:
-    if not current:
+def checkout_null(target) -> bool:
+    if not target:
         raise ValidationError("", reason="啥都没输入啊")
 
 
