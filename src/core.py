@@ -120,6 +120,7 @@ def checkout_null(_, current) -> bool:
 # 输入文件检测
 def checkout_file(_, current) -> bool:
     if current == "-":
+        print()
         if not install_nyxbot():
             raise ValidationError("", reason="自己下载后再来吧")
 
@@ -405,7 +406,7 @@ def main() -> None:
 
     ask(Text("_", message="这里我会等你多开终端启动好QQ机器人框架，好了就随便输入点什么，然后继续配置NyxBot吧"))
     current_dir = os.getcwd().split("/")
-    starter_command.append(ask(Path("nyxbot_path", message=f"请输入NyxBot.jar的路径（当前位于/{current_dir[0]}/.../{current_dir[-1]}），或输入\"-\"安装", validate=checkout_file)))
+    starter_command.append(ask(Path("nyxbot_path", message=f"请输入NyxBot.jar的路径（当前位于{current_dir[0]}/.../{current_dir[-1]}），或输入“-”下载它", validate=checkout_file)))
     if not configure_nyxbot():
         error("配置过程发生错误")
         return
