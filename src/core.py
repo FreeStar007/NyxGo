@@ -183,8 +183,8 @@ def github_proxy(github_url) -> str:
         error(f"代理服务器{proxy}请求失败")
         
     if not speed:
-        warn("代理服务器用不了啊，只能采用其它方案了")
-        return ""
+        warn("代理服务器用不了啊，只能直接直连试试看了")
+        return github_url
         
     choice = min(speed, key=speed.get)
     info(f"使用{choice}作为代理服务器，延时为{speed[choice]}ms，一共可用代理服务器数量为{len(speed)}/{len(source['proxies'])}")
@@ -234,7 +234,7 @@ def install_nyxbot() -> bool:
     saved_path = "./NyxBot.jar"
     info("开始下载NyxBot.jar……")
     if not downloader(github_proxy(source["nyxbot"]), saved_path, "NyxBot.jar下载中……"):
-        return Fasle
+        return False
 
     info("NyxBot.jar已经放在当前目录下了")
     return True
