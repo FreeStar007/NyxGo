@@ -350,11 +350,11 @@ def configure_nyxbot() -> bool:
                     case _:
                         return False
             case Choices.CONNECTION_URL.value:
-                starter_command.append(f"-wsClientUrl={ask(Text("wsClientUrl", message=f"请输入{Choices.CONNECTION_URL.value}（默认ws://127.0.0.1:8081）", default="ws://127.0.0.1:8081", validate=checkout_url))}")
+                starter_command.append(f"-wsClientUrl={ask(Text('wsClientUrl', message=f'请输入{Choices.CONNECTION_URL.value}（默认ws://127.0.0.1:8080）', default='ws://127.0.0.1:8080', validate=checkout_url))}")
             case Choices.END_POINT.value:
-                starter_command.append(f"-wsServerUrl={ask(Text("wsServerUrl", message=f"请输入{Choices.END_POINT.value}（默认/ws/shiro，那么客户端连接时的URL就是ws://127.0.0.1:<启动时的端口>/ws/shiro）", default="/ws/shiro"))}")
+                starter_command.append(f"-wsServerUrl={ask(Text('wsServerUrl', message=f'请输入{Choices.END_POINT.value}（默认/ws/shiro，那么客户端连接时的URL就是ws://127.0.0.1:<启动时的端口>/ws/shiro）', default='/ws/shiro'))}")
             case Choices.TOKEN.value:
-                starter_command.append(f"-shiroToken={(Text("token", message=f"请输入{Choices.TOKEN.value}（默认为空）"))}")
+                starter_command.append(f"-shiroToken={(Text('token', message=f'请输入{Choices.TOKEN.value}（默认为空）'))}")
             case Choices.DEBUG.value:
                 starter_command.append("-debug")
             case _:
