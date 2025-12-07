@@ -1,4 +1,3 @@
 httpx
 inquirer
 rich
-pyyaml
