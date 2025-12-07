@@ -393,7 +393,7 @@ def main() -> None:
     if ask(Confirm("to_shell", message="需要进入临时Shell环境以启动QQ机器人框架吗？", default=True)):
         warn("10秒后进入临时Shell环境，让你启动一下QQ机器人框架并去配置，结束后输入CTRL+A和D来回到前台")
         sleep(10)
-        temp_shell("onebot", "\"PS1=\\\"(TEMP SHELL) $PS1\\\" && clear\\n\"")
+        temp_shell("onebot", "\"PS1=\\\"(TEMP SHELL) \w\$ \\\" && clear\\n\"")
 
     nyxbot_path = ask(Path("nyxbot_path", message=f"请输入NyxBot.jar的路径（当前位于{os.getcwd()}），或者直接输入“-”开始下载它", validate=checkout_nyxbot))
     if not configure_nyxbot():
