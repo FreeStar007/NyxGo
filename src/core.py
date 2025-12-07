@@ -2,7 +2,6 @@
 import os
 import httpx
 import json
-import yaml
 import subprocess as sp
 import shutil
 from time import time, sleep
