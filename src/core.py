@@ -49,7 +49,7 @@ with open("./source.json", "r") as r:
 # 命令输入
 def shell(command: Iterator | str, error_info=None, complex_mode=False) -> str | bool:
     try:
-        return sp.run(command.strip().split(" ") if not complex_mode else command, capture_output=True, text=True, check=True, shell=complex_mode).stdout
+        sp.run(command.strip().split(" ") if not complex_mode else command, check=True, shell=complex_mode)
     except sp.CalledProcessError:
         if error_info:
             error(error_info)
@@ -85,7 +85,7 @@ def checkout_pkgm() -> bool:
     global global_pkgm
     pkgms = ("apt", "dnf", "yum")
     for pkgm in pkgms:
-        if shell(f"command -v {pkgm}", complex_mode=True):
+        if shell(f"command -v {pkgm} > /dev/null", complex_mode=True):
             info(f"使用{pkgm}包管理器")
             global_pkgm = pkgm
             return True
