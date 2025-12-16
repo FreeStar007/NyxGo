@@ -5,10 +5,6 @@ if [ "$EUID" -eq 0 ]; then
 fi
 readonly NUSER=$USER
 readonly SYSTEM_PYTHON="$(command -v python3)"
-if [ -z "$SYSTEM_PYTHON" ]; then
-    echo "环境缺少python3"
-    exit 1
-fi
 readonly TARGET="/usr/lib/nyxgo_venv"
 readonly TEMP_HOME="$TARGET/bin"
 pkgm=""
@@ -23,6 +19,10 @@ else
     exit
 fi
 echo "开始配置环境……"
+if [ -z "$SYSTEM_PYTHON" ]; then
+    echo "安装python3……"
+    sudo "$pkgm" install -y python3
+fi
 if ! command -v git --help &> /dev/null; then
     echo "安装git……"
     sudo "$pkgm" install -y git
