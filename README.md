@@ -16,7 +16,7 @@ NyxGo**项目本身是为**NyxBot**定制的引导脚本，需一定基础，与
 
  - 进入**src**文件夹，使用命令`bash ./start.sh`以启动，若没有权限就使用`chmod -x ./start.sh`赋予，**kill.sh**用于停止运行，用法与**start.sh**一致
 
- - 该项目附有使用教学视频，新手可以点击这里观看[**使用教学视频**](https://www.bilibili.com/video/BV1Z527BfEB5/?share_source=copy_web&vd_source=a0744cac2ad59dfb4f26cedd1524ceb3)
+ - 该项目附有使用教学视频，新手可以点击这里观看[**使用教学视频**](https://b23.tv/Yf52q6a)
 
 # NyxBot项目
 
