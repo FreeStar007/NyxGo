@@ -205,17 +205,17 @@ def downloader(url: str, saved_path: str, downloading_info: str) -> bool:
 
 
 def install_jdk() -> bool:
-    info("开始帮你搞OpenJDK21")
+    info("开始帮你搞openjdk21")
     target_pkg = {
         "apt": "openjdk-21-jdk",
         "dnf": "java-21-openjdk"
     }
     target_pkg["yum"] = target_pkg["dnf"]
-    info("开始安装OpenJDK21……")
-    if not shell(f"sudo {global_pkgm} install -y {target_pkg[global_pkgm]}", "OpenJDK21安装失败了，只能你自己先装上再重启脚本了"):
+    info("开始安装openjdk21……")
+    if not shell(f"sudo {global_pkgm} install -y {target_pkg[global_pkgm]}", "openjdk21安装失败了，只能你自己先装上再重启脚本了"):
         return False
         
-    info("OpenJDK21装完了")
+    info("openjdk21装完了")
     return True
 
 
@@ -395,7 +395,7 @@ def main() -> None:
         
     info("配置完成，启动NyxBot……")
     info("在启动完成后可以根据其终端的输出查看WebUI（也就是配置NyxBot的界面）地址和端口号以及账号密码，然后最后记得一切结束后CTRL+A和D再次挂到后台，这样就不怕它挂掉了！")
-    warn("10秒后进入临时Shell环境来执行NyxBot，会本次自动帮你配置一切，你只需要在NyxBot的数据初始化完毕后输入CTRL和D回到前台")
+    warn("10秒后进入临时Shell环境来执行NyxBot，本次会自动帮你配置一切，你只需要在NyxBot的数据初始化完毕后输入CTRL和D回到前台")
     sleep(10)
     temp_shell("nyxbot", f"\"{' '.join(starter_command)}\\n\"")
     info("NyxBot部署完毕！")
