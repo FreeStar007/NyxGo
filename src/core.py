@@ -359,7 +359,7 @@ def configure_nyxbot() -> bool:
 # 主函数
 def main() -> None:
     global locate_dir
-    shell("clear", "逆天了，清屏都能失败，不过无所谓不影响")
+    shell("clear")
     rprint(Panel(
         "Warframe状态查询机器人，由著名架构师王小美开发，部署简易，更新勤奋，让我们追随她！\n请在安装过程中确保网络通畅啊！\n王小美个人博客地址：https://kingprimes.top",
         title="NyxBot引导脚本",
@@ -384,7 +384,7 @@ def main() -> None:
                 return
     
     if ask(Confirm("to_shell", message="需要进入临时Shell环境以启动QQ机器人框架吗？", default=True)):
-        warn("10秒后进入临时Shell环境，让你启动一下QQ机器人框架并去配置，结束后输入CTRL+A和D来回到前台")
+        warn("10秒后进入临时Shell环境，让你启动一下QQ机器人框架并去配置，结束后输入CTRL+A然后按D来回到前台")
         sleep(10)
         temp_shell("onebot", "\"PS1=\\\"(TEMP SHELL) $ \\\" && clear\\n\"")
 
@@ -394,8 +394,8 @@ def main() -> None:
         return
         
     info("配置完成，启动NyxBot……")
-    info("在启动完成后可以根据其终端的输出查看WebUI（也就是配置NyxBot的界面）地址和端口号以及账号密码，然后最后记得一切结束后CTRL+A和D再次挂到后台，这样就不怕它挂掉了！")
-    warn("10秒后进入临时Shell环境来执行NyxBot，本次会自动帮你配置一切，你只需要在NyxBot的数据初始化完毕后输入CTRL和D回到前台")
+    info("在启动完成后可以根据其终端的输出查看WebUI（也就是配置NyxBot的界面）地址和端口号以及账号密码！")
+    warn("10秒后进入临时Shell环境来执行NyxBot，本次会自动帮你配置一切，你只需要在NyxBot的数据初始化完毕后输入CTRL加A然后按D回到前台！")
     sleep(10)
     temp_shell("nyxbot", f"\"{' '.join(starter_command)}\\n\"")
     info("NyxBot部署完毕！")
