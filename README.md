@@ -14,7 +14,7 @@ NyxGo**项目本身是为**NyxBot**定制的引导脚本，与**NyxBot**环境�
 
   - **Python**环境配置
 
-    - 命令行输入`python3 --version`即可查看当前环境下的Python版本，要求为**Python3.10.x**及其以上版本，若高于，则继续跳过此条；若低于，一般可通过系统包管理器来安装，推荐**Python3.11.x**，常见包名为`python3.11`，安装例子：`sudo apt install -y python3.11`/`sudo dnf install python3.11`，安装后需要重新链接，命令行输入`sudo ln -sf /usr/bin/python3.11 /usr/bin/python && ln -sf /usr/bin/python3.11 /usr/bin/python3`，这样就完成Python配置了
+    - 命令行输入`python3 --version`即可查看当前环境下的Python版本，要求为**Python3.10.x**及其以上版本，若高于，则继续跳过此条；若低于，一般可通过系统包管理器来安装，推荐**Python3.11.x**，常见包名为`python3.11`，安装例子：`sudo apt install -y python3.11`/`sudo dnf install python3.11`，安装后需要重新链接，命令行输入`sudo ln -sf /usr/bin/python3.11 /usr/bin/python && sudo ln -sf /usr/bin/python3.11 /usr/bin/python3`，这样就完成Python配置了
 
   - **确保网络通畅**：安装过程中确保网络**稳定**，**波动小**，防止**下载**/**请求**等网络操作意外中断
     
